@@ -28,6 +28,19 @@ namespace SiteMapCrawlerTests
         }
 
         [Test]
+        public void ExtractLinks_Relative_TrailingSlashOnBase()
+        {
+            var html = LoadHtmlFile("\\Resources\\RelativeUrl.html");
+
+            var links = _extractor.ExtractLinks(html, "http://base.com/");
+
+            Assert.AreEqual(2, links.Count);
+            Assert.AreEqual("http://base.com/relative/page1", links.First());
+            Assert.AreEqual("http://base.com/relative/page2", links.Skip(1).First());
+        }
+
+
+        [Test]
         public void ExtractLinks_Absolute()
         {
             var html = LoadHtmlFile("\\Resources\\AbsoluteUrl.html");
@@ -36,6 +49,16 @@ namespace SiteMapCrawlerTests
 
             Assert.AreEqual(1, links.Count);
             Assert.AreEqual("http://www.website.com/page1", links.First());
+        }
+
+        [Test]
+        public void ExtractLinks_IgnoresLinkToSamePage()
+        {
+            var html = LoadHtmlFile("\\Resources\\SamePageLink.html");
+
+            var links = _extractor.ExtractLinks(html, "base.com");
+
+            Assert.AreEqual(0, links.Count);
         }
 
         private string LoadHtmlFile(string filename)

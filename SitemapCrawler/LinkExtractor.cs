@@ -21,6 +21,9 @@ namespace SitemapCrawler
                 HtmlAttribute att = aNode.Attributes["href"];
                 var link = att.Value;
 
+                if (link == "/" || link == "")
+                    continue;
+
                 links.Add(MakeAbsolute(link, pageUrl));
             }
 
@@ -29,6 +32,8 @@ namespace SitemapCrawler
 
         private string MakeAbsolute(string link, string baseUrl)
         {
+            baseUrl = baseUrl.TrimEnd('/');
+
             if (link.StartsWith("http"))
                 return link;
             if (link.StartsWith("/"))
