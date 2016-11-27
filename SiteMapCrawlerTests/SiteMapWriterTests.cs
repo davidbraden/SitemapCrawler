@@ -17,7 +17,7 @@ namespace SiteMapCrawlerTests
 
 
             var path = Path.GetDirectoryName(System.Reflection.Assembly.GetAssembly(typeof(SiteMapWriter)).Location);
-            var sitemap = File.ReadAllText(path + "test.json");
+            var sitemap = File.ReadAllText(path + "/test.json");
 
             Assert.AreEqual("{\"site.com/page\":{\"Url\":\"site.com/page\",\"Links\":[],\"ExternalLinks\":[],\"Assets\":[]}}", sitemap);
         }

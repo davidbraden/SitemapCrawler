@@ -3,14 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 
 namespace SitemapCrawler
 {
     public class LinkExtractor
     {
-        public HashSet<string> ExtractUrls(byte[] htmlContent)
+        public HashSet<string> ExtractLinks(string htmlContent, string pageUrl)
         {
-            return new HashSet<string>();
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(htmlContent);
+
+            var links = new HashSet<string>();
+
+            foreach (HtmlNode aNode in htmlDoc.DocumentNode.SelectNodes("//a[@href]"))
+            {
+                HtmlAttribute att = aNode.Attributes["href"];
+                var link = att.Value;
+
+                links.Add(MakeAbsolute(link, pageUrl));
+            }
+
+            return links;
+        }
+
+        private string MakeAbsolute(string link, string baseUrl)
+        {
+            if (link.StartsWith("http"))
+                return link;
+            if (link.StartsWith("/"))
+                return baseUrl + link;
+            return baseUrl + "/" + link;
+        }
+
+        public bool IsExternalLink(string link )
+        {
+            return false;
+        }
+
+        public bool IsAsset(string link)
+        {
+            return false;
         }
     }
 }

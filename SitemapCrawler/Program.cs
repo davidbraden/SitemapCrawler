@@ -16,22 +16,32 @@ namespace SitemapCrawler
             Console.WriteLine("Enter the base url to scrape:");
             var baseUrl = new Uri(Console.ReadLine());
 
-            var urlsToScrape = new Queue<string>();
+            var urlsToScrape = new Queue<Tuple<string, int>>();
             var pages = new Dictionary<string, WebPage>();
 
-            urlsToScrape.Enqueue(baseUrl.ToString());
+            urlsToScrape.Enqueue(new Tuple<string, int>(baseUrl.ToString(), 0));
 
             while (urlsToScrape.Count > 0)
             {
-                var url = urlsToScrape.Dequeue();
-                var webPage = _pageCrawler.ScrapeUrl(url).Result;
+                var tuple = urlsToScrape.Dequeue();
+
+                if (tuple.Item2 > 1)
+                    continue;
+
+                if (pages.ContainsKey(tuple.Item1))
+                    continue;
+
+                var webPage = _pageCrawler.ScrapeUrl(tuple.Item1).Result;
+
+                pages.Add(tuple.Item1, webPage);
+
                 if (webPage != null)
                 {
                     var newPages = new HashSet<string>(webPage.Links);
                     newPages.ExceptWith(pages.Keys);
                     foreach (var newPage in newPages)
                     {
-                        urlsToScrape.Enqueue(newPage);
+                        urlsToScrape.Enqueue(new Tuple<string, int>(newPage, tuple.Item2 + 1));
                     }
                 }
             }

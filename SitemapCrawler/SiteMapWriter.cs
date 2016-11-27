@@ -16,7 +16,7 @@ namespace SitemapCrawler
 
             var json = JsonConvert.SerializeObject(pages);
 
-            File.WriteAllText(path + fileName, json);
+            File.WriteAllText(path + "/" + fileName, json);
         }
     }
 }
