@@ -11,6 +11,8 @@ namespace SitemapCrawler
         private static PageCrawler _pageCrawler = new PageCrawler();
         private static SiteMapWriter _siteMapWriter = new SiteMapWriter();
 
+        private const int MaxDepth = 2;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Enter the base url to scrape:");
@@ -25,7 +27,7 @@ namespace SitemapCrawler
             {
                 var tuple = urlsToScrape.Dequeue();
 
-                if (tuple.Item2 > 1)
+                if (tuple.Item2 > MaxDepth)
                     continue;
 
                 if (pages.ContainsKey(tuple.Item1))
