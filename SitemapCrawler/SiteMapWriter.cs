@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,11 @@ namespace SitemapCrawler
     {
         public void Write(Dictionary<string, WebPage> pages, string fileName)
         {
-            
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetAssembly(typeof(SiteMapWriter)).Location);
+
+            var json = JsonConvert.SerializeObject(pages);
+
+            File.WriteAllText(path + fileName, json);
         }
     }
 }
