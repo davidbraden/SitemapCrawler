@@ -41,14 +41,19 @@ namespace SitemapCrawler
             return baseUrl + "/" + link;
         }
 
-        public bool IsExternalLink(string link )
+        public bool IsLink(string link, string domain)
         {
-            return false;
+            return !IsExternalLink(link, domain) && !IsAsset(link);
         }
 
         public bool IsAsset(string link)
         {
             return false;
+        }
+
+        public bool IsExternalLink(string link, string domain)
+        {
+            return !link.Contains(domain);
         }
     }
 }

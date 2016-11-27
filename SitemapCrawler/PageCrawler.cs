@@ -15,7 +15,8 @@ namespace SitemapCrawler
         public async Task<WebPage> ScrapeUrl(string url)
         {
             try {
-                var response = await _httpClient.GetAsync(url);
+                var uri = new Uri(url);
+                var response = await _httpClient.GetAsync(uri);
 
                 if (!response.IsSuccessStatusCode)
                     return null;
@@ -25,7 +26,11 @@ namespace SitemapCrawler
 
                 var links = _linkExtractor.ExtractLinks(response.Content.ReadAsStringAsync().Result, url);
 
-                return new WebPage(url, links, new HashSet<string>(), new HashSet<string>());
+                return new WebPage(
+                    url,
+                    new HashSet<string>(links.Where(l => _linkExtractor.IsLink(l, uri.Host))),
+                    new HashSet<string>(links.Where(l => _linkExtractor.IsExternalLink(l, uri.Host))),
+                    new HashSet<string>(links.Where(l => _linkExtractor.IsAsset(l))));
             } catch
             {
                 return null;

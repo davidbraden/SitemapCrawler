@@ -4,10 +4,11 @@ Console app for generating a json sitemap given a starting url. Does a breadth f
 I didn't want to go over the time so it's not complete. 
 
 ### Issues
-* Only checks <a> tags and doesn't look at images etc.
-* Doesn't strip external links
-* Not fully tested - ended up manually testing with http://cryptopals.com/ as it was the simplest website I could find quickly. Things like www.bbc.co.uk/news, https://www.facebook.com/ etc don't work yet.
-
+* Only checks <a href> tags and doesn't look at images etc.
+* Doesn't strip out query string/fragments.
+* Doesn't handle sub-domains.
+* Not fully unit tested - ended up manually testing with random sites.
+* Pretty slow, might investigate making it scrape urls concurrently.
 
 ## How to Run
 
